@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Walimatul 'Ursi | Tito Sumarsono & Andini Melati Putri</title>
   <meta name="description" content="Undangan Pernikahan & Walimatul 'Ursi Tito Sumarsono & Andini Melati Putri - Jumat, 9 Oktober 2026 di Surabaya.">
   <meta property="og:title" content="Walimatul 'Ursi | Tito & Andini">
@@ -150,7 +150,9 @@
         Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami:
       </p>
 
-      <!-- GROOM CARD -->
+      <!-- COUPLE CARDS CONTAINER (RESPONSIVE) -->
+      <div class="couple-cards-container">
+        <!-- GROOM CARD -->
       <div class="couple-card">
         <div class="couple-avatar-wrap">
           <img src="assets/images/groom.jpg" alt="Tito Sumarsono">
@@ -188,6 +190,7 @@
           <span>@andinimelati</span>
         </a>
       </div>
+      </div>
     </section>
 
     <!-- ACARA & PETA LOKASI SECTION -->
@@ -213,7 +216,9 @@
         </div>
       </div>
 
-      <!-- AKAD NIKAH CARD -->
+      <!-- EVENTS GRID CONTAINER (RESPONSIVE) -->
+      <div class="events-grid-container">
+        <!-- AKAD NIKAH CARD -->
       <div class="event-card">
         <span class="event-badge">AKAD NIKAH</span>
         <h3 class="event-name">Prosesi Ijab Qabul</h3>
@@ -366,6 +371,7 @@
           </div>
         </div>
 
+      </div>
       </div>
 
       <!-- DRESS CODE RECOMMENDATION -->
@@ -551,8 +557,11 @@
         Silakan tinggalkan pesan, doa restu, dan konfirmasi kehadiran Bapak/Ibu/Saudara/i untuk kedua mempelai di bawah ini:
       </p>
 
-      <!-- FORM KOMENTAR TAMU -->
-      <div class="rsvp-card">
+      <!-- RSVP RESPONSIVE 2-COLUMN LAYOUT -->
+      <div class="rsvp-layout-container">
+        <div class="rsvp-form-col">
+          <!-- FORM KOMENTAR TAMU -->
+          <div class="rsvp-card">
         <form id="rsvp-form">
           <div class="form-group">
             <label for="rsvp-name" class="form-label">Nama Tamu Undangan *</label>
@@ -604,8 +613,10 @@
           </button>
         </form>
       </div>
+        </div>
 
-      <!-- RSVP LIVE STATS -->
+        <div class="rsvp-comments-col">
+          <!-- RSVP LIVE STATS -->
       <div class="rsvp-stats">
         <div class="stat-item">
           <div id="stat-total" class="stat-num">5</div>
@@ -632,6 +643,8 @@
       <div id="guest-wishes-list" class="guest-wishes-list">
         <!-- Rendered dynamically by script.js with like button and persistent storage -->
       </div>
+        </div>
+      </div>
     </section>
 
     <!-- TANDA KASIH / AMPLOP DIGITAL -->
@@ -648,7 +661,9 @@
         Doa restu Anda merupakan karunia terindah bagi kami. Namun jika memberi adalah ungkapan kasih Anda, kami menyediakan sarana kado digital:
       </p>
 
-      <!-- REKENING BCA -->
+      <!-- GIFTS GRID CONTAINER (RESPONSIVE) -->
+      <div class="gifts-grid-container">
+        <!-- REKENING BCA -->
       <div class="gift-card">
         <div class="bank-logo bca">BANK BCA</div>
         <div class="acc-number">7880 1234 56</div>
@@ -694,6 +709,7 @@
           <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
           <span>Salin Alamat Lengkap</span>
         </button>
+      </div>
       </div>
     </section>
 
