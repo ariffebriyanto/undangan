@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Walimatul 'Ursi | Tito Sumarsono & Andini Melati Putri</title>
+  <meta name="description" content="Undangan Pernikahan & Walimatul 'Ursi Tito Sumarsono & Andini Melati Putri - Jumat, 9 Oktober 2026 di Surabaya.">
+  <meta property="og:title" content="Walimatul 'Ursi | Tito & Andini">
+  <meta property="og:description" content="Dengan memohon rahmat dan ridho Allah SWT, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.">
+  <meta property="og:image" content="assets/images/couple.jpg">
+  <link rel="stylesheet" href="style.css">
+  <!-- Leaflet CSS for rich interactive Map View -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💍</text></svg>">
+</head>
+<body>
+
+  <!-- Petals Floating Effect Canvas -->
+  <canvas id="petals-canvas"></canvas>
+
+  <!-- Background Audio (Generative Web Audio API Fallback) -->
+  <audio id="bg-audio" preload="auto" loop></audio>
+
+  <!-- Floating Music Toggle -->
+  <button id="music-toggle" class="music-toggle" aria-label="Nyalakan/Matikan Musik">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </button>
+
+  <!-- ========================================================
+       COVER / ENVELOPE OPENING MODAL
+       ======================================================== -->
+  <div id="cover-screen" class="cover-screen">
+    <div class="cover-bg-image"></div>
+    <div class="cover-overlay"></div>
+    <div class="cover-content">
+      <div class="cover-lanterns">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2 4h4l-3 4 2 5-5-3-5 3 2-5-3-4h4l2-4zm0 6c-1.66 0-3 1.34-3 3v6c0 1.66 1.34 3 3 3s3-1.34 3-3v-6c0-1.66-1.34-3-3-3z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 2l2 4h4l-3 4 2 5-5-3-5 3 2-5-3-4h4l2-4zm0 6c-1.66 0-3 1.34-3 3v6c0 1.66 1.34 3 3 3s3-1.34 3-3v-6c0-1.66-1.34-3-3-3z"/></svg>
+      </div>
+      <p class="cover-sub">Walimatul 'Ursi</p>
+      <h1 class="cover-title">
+        Tito
+        <span>&amp;</span>
+        Andini
+      </h1>
+      <div class="cover-date-pill">Jumat, 9 Oktober 2026</div>
+
+      <div class="guest-card">
+        <p class="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+        <h3 id="guest-name" class="guest-name">Tamu Undangan</h3>
+        <p class="guest-note">*Mohon maaf bila ada kesalahan penulisan nama &amp; gelar</p>
+      </div>
+
+      <button id="btn-open-invitation" class="btn-open">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span>Buka Undangan</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MAIN APP CONTAINER (MOBILE-FIRST LUXURY LAYOUT)
+       ======================================================== -->
+  <main class="app-container">
+
+    <!-- HERO SECTION -->
+    <section id="beranda" class="hero-section">
+      <div class="hero-arch-frame">
+        <div class="bismillah-text">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+        <h2 class="invitation-type">Walimatul 'Ursi</h2>
+        <p class="invitation-subtitle">Acara Syukuran Pernikahan</p>
+
+        <div class="hero-image-wrap">
+          <img src="assets/images/couple.jpg" alt="Tito Sumarsono & Andini Melati Putri">
+        </div>
+
+        <div class="couple-names">
+          <h1 class="groom-bride-name">Tito Sumarsono</h1>
+          <span class="ampersand">&amp;</span>
+          <h1 class="groom-bride-name">Andini Melati Putri</h1>
+        </div>
+
+        <p class="hero-date">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 4h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>
+          Jumat, 9 Oktober 2026 • Surabaya
+        </p>
+
+        <!-- COUNTDOWN TIMER -->
+        <div class="countdown-box">
+          <div class="countdown-grid">
+            <div class="countdown-card">
+              <div id="count-days" class="countdown-num">00</div>
+              <div class="countdown-label">Hari</div>
+            </div>
+            <div class="countdown-card">
+              <div id="count-hours" class="countdown-num">00</div>
+              <div class="countdown-label">Jam</div>
+            </div>
+            <div class="countdown-card">
+              <div id="count-mins" class="countdown-num">00</div>
+              <div class="countdown-label">Menit</div>
+            </div>
+            <div class="countdown-card">
+              <div id="count-secs" class="countdown-num">00</div>
+              <div class="countdown-label">Detik</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+            <button id="btn-google-calendar" class="btn-calendar">
+              <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+              <span>Google Calendar</span>
+            </button>
+            <button id="btn-ical-calendar" class="btn-calendar">
+              <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+              <span>Download (.ics)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- AYAT SUCI AR-RUM -->
+    <section class="quote-section">
+      <div class="quote-card">
+        <p class="quote-arabic">
+          وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً ۚ إِنَّ فِي ذَٰلِكَ لَآيَاتٍ لِّقَوْمٍ يَتَفَكَّرُونَ
+        </p>
+        <p class="quote-translation">
+          "Dan di antara tanda-tanda kebesaran-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir."
+        </p>
+        <p class="quote-ref">(QS. Ar-Rum: 21)</p>
+      </div>
+    </section>
+
+    <!-- MEMPELAI SECTION -->
+    <section id="pasangan" class="couple-section">
+      <p class="section-tag">Mempelai Pengantin</p>
+      <h2 class="section-title">Pasangan Berbahagia</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <p style="text-align: center; font-size: 0.88rem; margin-bottom: 24px; color: var(--text-body);">
+        Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan putra-putri kami:
+      </p>
+
+      <!-- GROOM CARD -->
+      <div class="couple-card">
+        <div class="couple-avatar-wrap">
+          <img src="assets/images/groom.jpg" alt="Tito Sumarsono">
+        </div>
+        <p class="person-role">Mempelai Pria</p>
+        <h3 class="person-name">Tito Sumarsono</h3>
+        <p class="person-parents">
+          Putra tercinta dari<br>
+          <strong>Bapak Abdul Karim &amp; Ibu Sumarni</strong>
+        </p>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <span>@titosumarsono</span>
+        </a>
+      </div>
+
+      <!-- COUPLE DIVIDER HEART -->
+      <div class="couple-divider-heart">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+
+      <!-- BRIDE CARD -->
+      <div class="couple-card">
+        <div class="couple-avatar-wrap">
+          <img src="assets/images/bride.jpg" alt="Andini Melati Putri">
+        </div>
+        <p class="person-role">Mempelai Wanita</p>
+        <h3 class="person-name">Andini Melati Putri</h3>
+        <p class="person-parents">
+          Putri tercinta dari<br>
+          <strong>Bapak Bambang Irawan &amp; Ibu Siti Aminah</strong>
+        </p>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <span>@andinimelati</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ACARA & PETA LOKASI SECTION -->
+    <section id="acara" class="event-section">
+      <p class="section-tag">Waktu &amp; Lokasi</p>
+      <h2 class="section-title">Informasi Waktu &amp; Peta Lokasi</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <!-- HIGHLIGHT WAKTU & TANGGAL BANNER -->
+      <div class="event-highlight-banner">
+        <div class="highlight-date-badge">
+          <span class="day-name">JUMAT</span>
+          <span class="day-num">09</span>
+          <span class="month-year">OKTOBER 2026</span>
+        </div>
+        <div class="highlight-time-info">
+          <h4>Pukul 19.00 WIB (Ba'da Isya)</h4>
+          <p>Syukuran Walimatul 'Ursi • Jl. Rembang 25 A, Surabaya</p>
+        </div>
+      </div>
+
+      <!-- AKAD NIKAH CARD -->
+      <div class="event-card">
+        <span class="event-badge">AKAD NIKAH</span>
+        <h3 class="event-name">Prosesi Ijab Qabul</h3>
+        <div class="event-meta-list">
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Hari &amp; Tanggal</strong>
+              <span>Jumat, 9 Oktober 2026</span>
+            </div>
+          </div>
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Waktu</strong>
+              <span>08.00 - 10.00 WIB (Khusus Keluarga Inti)</span>
+            </div>
+          </div>
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Tempat</strong>
+              <span>Masjid Al-Falah / Kediaman Mempelai Surabaya</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WALIMATUL URSI & PETA LOKASI DETAIL (SESUAI FLYER) -->
+      <div class="event-card main-event-card">
+        <div class="gold-corner-tag">ACARA UTAMA</div>
+        <span class="event-badge">SYUKURAN PERNIKAHAN</span>
+        <h3 class="event-name">Walimatul 'Ursi</h3>
+        
+        <p style="font-size: 0.86rem; color: var(--text-body); margin-bottom: 16px;">
+          Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Bapak/Saudara sekalian:
+        </p>
+
+        <div class="event-meta-list">
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Hari &amp; Tanggal</strong>
+              <span>Jumat, 9 Oktober 2026</span>
+            </div>
+          </div>
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Pukul / Waktu</strong>
+              <span style="font-weight: 700; color: var(--primary);">19.00 WIB (Ba'da Isya) - Selesai</span>
+            </div>
+          </div>
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Alamat Lengkap</strong>
+              <span>Jl. Rembang 25 A, Surabaya, Jawa Timur</span>
+            </div>
+          </div>
+          <div class="event-meta-item">
+            <div class="event-icon-wrap">
+              <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            </div>
+            <div class="event-info-text">
+              <strong>Tuan Rumah</strong>
+              <span>Bapak Abdul Karim &amp; Ibu Sumarni</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PETA LOKASI INTERAKTIF & VIEW MAP LENGKAP -->
+        <div class="map-section-box">
+          <div class="map-header-title">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--gold-dark)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            <span>Peta Lokasi &amp; Panduan Rute</span>
+          </div>
+
+          <!-- MAP VIEW SWITCHER TABS -->
+          <div class="map-view-switcher">
+            <button id="btn-tab-leaflet" class="map-view-tab active">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+              <span>Peta Interaktif (Leaflet)</span>
+            </button>
+            <button id="btn-tab-gmaps" class="map-view-tab">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <span>Google Maps View</span>
+            </button>
+          </div>
+
+          <!-- LEAFLET INTERACTIVE MAP CONTAINER -->
+          <div id="leaflet-map-wrap" class="map-display-container">
+            <div id="leaflet-map" style="width: 100%; height: 280px; border-radius: 14px; z-index: 10;"></div>
+            <div class="map-floating-badge">
+              <span class="pulse-dot"></span>
+              <span>Lokasi Acara: Jl. Rembang 25 A, Surabaya</span>
+            </div>
+          </div>
+
+          <!-- GOOGLE MAPS IFRAME CONTAINER (FALLBACK / SECONDARY) -->
+          <div id="gmaps-map-wrap" class="map-display-container" style="display: none;">
+            <iframe 
+              src="https://maps.google.com/maps?q=Jl.+Rembang+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+              title="Peta Google Maps Jl Rembang 25 A Surabaya"
+              style="width: 100%; height: 280px; border: 0; border-radius: 14px; display: block;"
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+
+          <!-- DETAIL LOKASI CARD -->
+          <div class="location-detail-card">
+            <div class="loc-icon-pin">📍</div>
+            <div class="loc-text">
+              <strong>Kediaman Bapak Abdul Karim &amp; Ibu Sumarni</strong>
+              <p>Jl. Rembang No. 25 A, Surabaya, Jawa Timur</p>
+              <span class="loc-note">📌 Akses dekat Jl. Dupak / Krembangan / Pasar Turi Surabaya</span>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTONS FOR NAVIGATION & MAP -->
+          <div class="map-action-grid">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Jl.+Rembang+25A+Surabaya" target="_blank" rel="noopener noreferrer" class="btn-map">
+              <svg viewBox="0 0 24 24"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+              <span>Petunjuk Rute (Navigasi)</span>
+            </a>
+            <a href="https://maps.google.com/?q=Jl.+Rembang+25+A+Surabaya" target="_blank" rel="noopener noreferrer" class="btn-copy-alt">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <span>Buka Google Maps</span>
+            </a>
+          </div>
+
+          <div style="margin-top: 8px;">
+            <button class="btn-copy-alt btn-copy" style="width: 100%;" data-copy="Jl. Rembang 25 A, Surabaya, Jawa Timur">
+              <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+              <span>Salin Alamat Lengkap</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DRESS CODE RECOMMENDATION -->
+      <div class="dresscode-box">
+        <strong style="font-size: 0.88rem; color: var(--primary-deep);">Panduan Busana (Dress Code)</strong>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Disarankan mengenakan busana bernuansa anggun &amp; sopan:</p>
+        <div class="dresscode-colors">
+          <div class="color-swatch">
+            <div class="swatch-circle" style="background: #2d6a4f;"></div>
+            <span>Sage Green</span>
+          </div>
+          <div class="color-swatch">
+            <div class="swatch-circle" style="background: #ffffff; border-color: #ddd;"></div>
+            <span>Pure White</span>
+          </div>
+          <div class="color-swatch">
+            <div class="swatch-circle" style="background: #f3e5ab;"></div>
+            <span>Champagne</span>
+          </div>
+          <div class="color-swatch">
+            <div class="swatch-circle" style="background: #d4a373;"></div>
+            <span>Warm Earth</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KENANGAN / LOVE STORY TIMELINE -->
+    <section id="kenangan" class="story-section">
+      <p class="section-tag">Kisah Kasih</p>
+      <h2 class="section-title">Cerita &amp; Kenangan</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <div class="timeline">
+        <!-- ITEM 1 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-year">OKTOBER 2021</span>
+            <h4 class="timeline-title">Awal Perjumpaan</h4>
+            <p class="timeline-desc">
+              Takdir mempertemukan kami di sebuah kegiatan bakti sosial di Surabaya. Sebuah senyuman sederhana dan perbincangan hangat yang perlahan menjadi awal dari kisah indah kami.
+            </p>
+          </div>
+        </div>
+
+        <!-- ITEM 2 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-year">DESEMBER 2023</span>
+            <h4 class="timeline-title">Merajut Komitmen</h4>
+            <p class="timeline-desc">
+              Setelah saling mengenal karakter, nilai kehidupan, dan mendapatkan restu hangat dari kedua orang tua, kami bersepakat melangkah dalam ikatan yang lebih serius dengan niat ibadah.
+            </p>
+          </div>
+        </div>
+
+        <!-- ITEM 3 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-year">NOVEMBER 2025</span>
+            <h4 class="timeline-title">Hari Khitbah (Lamaran)</h4>
+            <p class="timeline-desc">
+              Di hadapan keluarga besar tercinta, Tito resmi meminang Andini. Momen haru dan penuh tawa menjadi saksi kesiapan kami berdua menyatukan dua keluarga besar.
+            </p>
+          </div>
+        </div>
+
+        <!-- ITEM 4 -->
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <span class="timeline-year">OKTOBER 2026</span>
+            <h4 class="timeline-title">Menuju Janji Suci</h4>
+            <p class="timeline-desc">
+              Insya Allah, pada Jumat 9 Oktober 2026, kami mengikrarkan janji suci di hadapan Allah SWT untuk saling menyayangi, menghormati, dan melengkapi hingga jannah-Nya.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERI FOTO & TEASER -->
+    <section id="galeri" class="gallery-section">
+      <p class="section-tag">Momen Bahagia</p>
+      <h2 class="section-title">Galeri Prewedding</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="gallery-tabs">
+        <button class="tab-btn active" data-filter="all">Semua Foto</button>
+        <button class="tab-btn" data-filter="prewed">Prewedding</button>
+        <button class="tab-btn" data-filter="momen">Detail &amp; Momen</button>
+      </div>
+
+      <!-- PHOTO GRID -->
+      <div class="gallery-grid">
+        <!-- 1: Tall Couple -->
+        <div class="gallery-card tall" data-category="prewed">
+          <img src="assets/images/couple.jpg" alt="Tito & Andini Modern White Beskap & Kebaya" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Tito &amp; Andini • Syukuran Walimatul 'Ursi</span>
+          </div>
+        </div>
+
+        <!-- 2: Outdoor Walk -->
+        <div class="gallery-card" data-category="prewed">
+          <img src="assets/images/gallery_outdoor.jpg" alt="Outdoor Pine Forest Prewedding" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Langkah Bersama di Alam</span>
+          </div>
+        </div>
+
+        <!-- 3: Ring & Henna Detail -->
+        <div class="gallery-card" data-category="momen">
+          <img src="assets/images/gallery_ring.jpg" alt="Cincin Khitbah & Henna" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Tanda Kasih &amp; Khitbah</span>
+          </div>
+        </div>
+
+        <!-- 4: Traditional Batik & Gebyok -->
+        <div class="gallery-card tall" data-category="prewed">
+          <img src="assets/images/gallery_traditional.jpg" alt="Busana Tradisional Gebyok Jawa" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Sentuhan Budaya &amp; Tradisi</span>
+          </div>
+        </div>
+
+        <!-- 5: Groom Solo -->
+        <div class="gallery-card" data-category="momen">
+          <img src="assets/images/groom.jpg" alt="Tito Sumarsono" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Tito Sumarsono</span>
+          </div>
+        </div>
+
+        <!-- 6: Bride Solo -->
+        <div class="gallery-card" data-category="momen">
+          <img src="assets/images/bride.jpg" alt="Andini Melati Putri" loading="lazy">
+          <div class="gallery-overlay">
+            <span class="gallery-caption">Andini Melati Putri</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO TEASER CARD -->
+      <div class="video-card">
+        <strong style="display:block; font-size: 0.95rem; color: var(--primary-deep); margin-bottom: 8px;">
+          Video Teaser Prewedding
+        </strong>
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 12px;">Cuplikan kebahagiaan perjalanan cinta Tito &amp; Andini</p>
+        <div class="video-thumb" onclick="showToast('Memutar cinematic teaser preview...');">
+          <img src="assets/images/gallery_outdoor.jpg" alt="Video Teaser Thumbnail">
+          <div class="play-badge">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BUKU TAMU & KOMENTAR-KOMENTAR TAMU SECTION -->
+    <section id="buku-tamu" class="rsvp-section">
+      <p class="section-tag">Buku Tamu &amp; Ucapan</p>
+      <h2 class="section-title">Komentar &amp; Doa Restu Tamu</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <p style="text-align: center; font-size: 0.85rem; color: var(--text-body); margin-bottom: 20px;">
+        Silakan tinggalkan pesan, doa restu, dan konfirmasi kehadiran Bapak/Ibu/Saudara/i untuk kedua mempelai di bawah ini:
+      </p>
+
+      <!-- FORM KOMENTAR TAMU -->
+      <div class="rsvp-card">
+        <form id="rsvp-form">
+          <div class="form-group">
+            <label for="rsvp-name" class="form-label">Nama Tamu Undangan *</label>
+            <input type="text" id="rsvp-name" class="form-control" placeholder="Contoh: Bpk. H. Ahmad Fauzi &amp; Keluarga" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Konfirmasi Kehadiran *</label>
+            <div class="rsvp-radios">
+              <label class="radio-pill">
+                <input type="radio" name="attendance" value="hadir" checked>
+                <div class="radio-badge">
+                  <span>🟢 Hadir</span>
+                </div>
+              </label>
+              <label class="radio-pill">
+                <input type="radio" name="attendance" value="tidak-hadir">
+                <div class="radio-badge">
+                  <span>🔴 Berhalangan</span>
+                </div>
+              </label>
+              <label class="radio-pill" style="grid-column: span 2;">
+                <input type="radio" name="attendance" value="ragu">
+                <div class="radio-badge">
+                  <span>🟡 Masih Ragu / Belum Pasti</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="rsvp-count" class="form-label">Jumlah Tamu yang Hadir</label>
+            <select id="rsvp-count" class="form-control">
+              <option value="1">1 Orang</option>
+              <option value="2" selected>2 Orang</option>
+              <option value="3">3 Orang</option>
+              <option value="4+">Rombongan Keluarga</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="rsvp-message" class="form-label">Komentar &amp; Doa Restu *</label>
+            <textarea id="rsvp-message" class="form-control" placeholder="Tuliskan ucapan selamat dan doa restu terbaik untuk Tito &amp; Andini..." required></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <span>Kirim Ucapan &amp; Komentar</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- RSVP LIVE STATS -->
+      <div class="rsvp-stats">
+        <div class="stat-item">
+          <div id="stat-total" class="stat-num">5</div>
+          <div class="stat-text">Total Ucapan</div>
+        </div>
+        <div class="stat-item">
+          <div id="stat-hadir" class="stat-num">4</div>
+          <div class="stat-text">Akan Hadir</div>
+        </div>
+        <div class="stat-item">
+          <div id="stat-likes" class="stat-num" style="color: #e63946;">28</div>
+          <div class="stat-text">Suka / Cinta</div>
+        </div>
+      </div>
+
+      <!-- FILTER KOMENTAR TAMU -->
+      <div class="comment-filter-tabs">
+        <button class="comment-tab active" data-filter="all">Semua Komentar (<span id="count-all-wishes">0</span>)</button>
+        <button class="comment-tab" data-filter="hadir">Hadir</button>
+        <button class="comment-tab" data-filter="tidak-hadir">Berhalangan</button>
+      </div>
+
+      <!-- DAFTAR KOMENTAR-KOMENTAR TAMU -->
+      <div id="guest-wishes-list" class="guest-wishes-list">
+        <!-- Rendered dynamically by script.js with like button and persistent storage -->
+      </div>
+    </section>
+
+    <!-- TANDA KASIH / AMPLOP DIGITAL -->
+    <section id="kado" class="gift-section">
+      <p class="section-tag">Tanda Kasih</p>
+      <h2 class="section-title">Amplop Digital</h2>
+      <div class="section-divider">
+        <div class="line"></div>
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+        <div class="line"></div>
+      </div>
+
+      <p style="text-align: center; font-size: 0.85rem; color: var(--text-body); margin-bottom: 20px;">
+        Doa restu Anda merupakan karunia terindah bagi kami. Namun jika memberi adalah ungkapan kasih Anda, kami menyediakan sarana kado digital:
+      </p>
+
+      <!-- REKENING BCA -->
+      <div class="gift-card">
+        <div class="bank-logo bca">BANK BCA</div>
+        <div class="acc-number">7880 1234 56</div>
+        <p class="acc-name">a.n. Tito Sumarsono</p>
+        <button class="btn-copy" data-copy="7880123456">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Salin No. Rekening</span>
+        </button>
+      </div>
+
+      <!-- REKENING MANDIRI -->
+      <div class="gift-card">
+        <div class="bank-logo mandiri">BANK MANDIRI</div>
+        <div class="acc-number">1410 0182 9912 3</div>
+        <p class="acc-name">a.n. Andini Melati Putri</p>
+        <button class="btn-copy" data-copy="1410018299123">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Salin No. Rekening</span>
+        </button>
+      </div>
+
+      <!-- REKENING BSI -->
+      <div class="gift-card">
+        <div class="bank-logo bsi">BANK SYARIAH INDONESIA (BSI)</div>
+        <div class="acc-number">7199 0821 54</div>
+        <p class="acc-name">a.n. Tito Sumarsono</p>
+        <button class="btn-copy" data-copy="7199082154">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Salin No. Rekening</span>
+        </button>
+      </div>
+
+      <!-- ALAMAT KADO FISIK -->
+      <div class="gift-card">
+        <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary-deep); margin-bottom: 6px;">
+          📦 Kirim Kado Fisik
+        </div>
+        <p class="acc-name" style="margin-bottom: 12px; line-height: 1.5;">
+          Jl. Rembang 25 A, Surabaya, Jawa Timur<br>
+          (Penerima: Bapak Abdul Karim / Tito Sumarsono)
+        </p>
+        <button class="btn-copy" data-copy="Jl. Rembang 25 A, Surabaya, Jawa Timur (Penerima: Bpk Abdul Karim / Tito Sumarsono)">
+          <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+          <span>Salin Alamat Lengkap</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- PENUTUP & TERIMA KASIH (SESUAI FLYER) -->
+    <section class="closing-section">
+      <div class="closing-bismillah">الحمد لله رب العالمين</div>
+      <p class="closing-text">
+        "Merupakan suatu kehormatan dan kebahagiaan bagi kami atas kehadiran Bapak/Ibu/Saudara sekalian."
+      </p>
+
+      <div class="closing-family">
+        Kami yang berbahagia,<br>
+        Keluarga Besar Tuan Rumah:
+        <strong>Bapak Abdul Karim &amp; Ibu Sumarni</strong>
+      </div>
+
+      <div class="closing-couple-names">
+        Tito &amp; Andini
+      </div>
+
+      <div class="closing-footer">
+        © 2026 Walimatul 'Ursi Tito Sumarsono &amp; Andini Melati Putri.<br>
+        Surabaya, Jawa Timur.
+      </div>
+    </section>
+
+    <!-- FLOATING BOTTOM NAVIGATION BAR -->
+    <nav class="floating-nav">
+      <a href="#beranda" class="nav-link active">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        <span>Home</span>
+      </a>
+      <a href="#pasangan" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        <span>Mempelai</span>
+      </a>
+      <a href="#acara" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+        <span>Acara</span>
+      </a>
+      <a href="#kenangan" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+        <span>Kenangan</span>
+      </a>
+      <a href="#galeri" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <span>Galeri</span>
+      </a>
+      <a href="#buku-tamu" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <span>Buku Tamu</span>
+      </a>
+      <a href="#kado" class="nav-link">
+        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+        <span>Kado</span>
+      </a>
+    </nav>
+
+  </main>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightbox-modal" class="lightbox-modal">
+    <div class="lightbox-img-wrap">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Tutup Galeri">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+      <button id="lightbox-prev" class="lightbox-nav-btn lightbox-prev" aria-label="Foto Sebelumnya">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <img id="lightbox-img" class="lightbox-img" src="" alt="Galeri Preview">
+      <button id="lightbox-next" class="lightbox-nav-btn lightbox-next" aria-label="Foto Selanjutnya">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Leaflet JS for Crystal Clear Map View -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="script.js"></script>
+</body>
+</html>
