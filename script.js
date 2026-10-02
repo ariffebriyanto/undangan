@@ -1,41 +1,277 @@
 /**
  * Tito & Andini Wedding Invitation Interactive Script
+ * Multi-Event Architecture:
+ * 1. Walimatul 'Ursi / Syukuran (9 Okt 2026, 19:00 WIB, Jl. Rembang 25 A Surabaya)
+ * 2. Akad Nikah & Resepsi (10 Okt 2026, Akad 10:00 & Resepsi 11:00-14:00 WIB, Aula Masjid Ulul Azmi UNAIR)
+ * 3. Ngunduh Mantu (11 Okt 2026, 08:00 WIB, Jl. Rembang 25 A Surabaya)
  */
 
+/* ========================================================
+   CONFIG DATA FOR 3 WEDDING EVENTS
+   ======================================================== */
+const WEDDING_EVENTS = {
+  walimah: {
+    id: 'walimah',
+    badge: "WALIMATUL 'URSI",
+    title: "Walimatul 'Ursi",
+    subtitle: "Acara Syukuran Pernikahan",
+    coverSub: "Syukuran Walimatul 'Ursi",
+    dateFormatted: "Jumat, 9 Oktober 2026",
+    dateDayName: "JUMAT",
+    dateDayNum: "09",
+    dateMonthYear: "OKTOBER 2026",
+    timeDisplay: "Pukul 19.00 WIB (Ba'da Isya) - Selesai",
+    timeShort: "19.00 WIB - Selesai",
+    venueName: "Kediaman Mempelai Pria (Bpk. Abdul Karim & Ibu Sumarni)",
+    addressShort: "Jl. Rembang 25 A, Surabaya",
+    addressFull: "Jl. Rembang No. 25 A, Kec. Bubutan, Surabaya, Jawa Timur",
+    addressNote: "📌 Akses dekat Jl. Dupak / Krembangan / Pasar Turi Surabaya",
+    targetDate: new Date('2026-10-09T19:00:00+07:00').getTime(),
+    calStart: "20261009T120000Z", // 19:00 WIB = 12:00 UTC
+    calEnd: "20261009T160000Z",   // 23:00 WIB = 16:00 UTC
+    calTitle: "Walimatul 'Ursi: Tito Sumarsono & Andini Melati Putri",
+    calDesc: "Acara Syukuran Walimatul 'Ursi Tito Sumarsono & Andini Melati Putri bertempat di Jl. Rembang 25 A, Surabaya.",
+    mapLat: -7.2475,
+    mapLng: 112.7275,
+    gmapsQuery: "Jl.+Rembang+25+A+Surabaya",
+    gmapsIframe: "https://maps.google.com/maps?q=Jl.+Rembang+25+A+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed",
+    gmapsDir: "https://www.google.com/maps/dir/?api=1&destination=Jl.+Rembang+25A+Surabaya",
+    storageKey: "tito_andini_wishes_walimah",
+    defaultWishes: []
+  },
+  akad: {
+    id: 'akad',
+    badge: "AKAD NIKAH & RESEPSI",
+    title: "Akad Nikah & Resepsi",
+    subtitle: "Prosesi Ijab Qabul & Resepsi Pernikahan",
+    coverSub: "Akad Nikah & Resepsi",
+    dateFormatted: "Sabtu, 10 Oktober 2026",
+    dateDayName: "SABTU",
+    dateDayNum: "10",
+    dateMonthYear: "OKTOBER 2026",
+    timeDisplay: "Akad: 10.00 WIB | Resepsi: 11.00 - 14.00 WIB",
+    timeShort: "10.00 - 14.00 WIB",
+    venueName: "Aula Masjid Ulul Azmi Universitas Airlangga Kampus C",
+    addressShort: "Masjid Ulul Azmi UNAIR Kampus C, Surabaya",
+    addressFull: "Aula Masjid Ulul Azmi, Jl. Dr. Ir. H.Soekarno Kampus C UNAIR, Mulyorejo, Surabaya, Jawa Timur",
+    addressNote: "📌 Kompleks Kampus C Universitas Airlangga, Mulyorejo Surabaya",
+    targetDate: new Date('2026-10-10T10:00:00+07:00').getTime(),
+    calStart: "20261010T030000Z", // 10:00 WIB = 03:00 UTC
+    calEnd: "20261010T070000Z",   // 14:00 WIB = 07:00 UTC
+    calTitle: "Akad Nikah & Resepsi: Tito Sumarsono & Andini Melati Putri",
+    calDesc: "Akad Nikah (10.00 WIB) & Resepsi Pernikahan (11.00 - 14.00 WIB) Tito & Andini bertempat di Aula Masjid Ulul Azmi Kampus C UNAIR Surabaya.",
+    mapLat: -7.270928,
+    mapLng: 112.784407,
+    gmapsQuery: "Masjid+Ulul+Azmi+Universitas+Airlangga+Surabaya",
+    gmapsIframe: "https://maps.google.com/maps?q=Masjid+Ulul+Azmi+Universitas+Airlangga+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed",
+    gmapsDir: "https://www.google.com/maps/dir/?api=1&destination=Masjid+Ulul+Azmi+Universitas+Airlangga+Surabaya",
+    storageKey: "tito_andini_wishes_akad",
+    defaultWishes: []
+  },
+  'ngunduh-mantu': {
+    id: 'ngunduh-mantu',
+    badge: "NGUNDUH MANTU",
+    title: "Ngunduh Mantu",
+    subtitle: "Acara Tasyakuran Ngunduh Mantu",
+    coverSub: "Tasyakuran Ngunduh Mantu",
+    dateFormatted: "Minggu, 11 Oktober 2026",
+    dateDayName: "MINGGU",
+    dateDayNum: "11",
+    dateMonthYear: "OKTOBER 2026",
+    timeDisplay: "Pukul 08.00 WIB - Selesai",
+    timeShort: "08.00 WIB - Selesai",
+    venueName: "Kediaman Mempelai Pria (Bpk. Abdul Karim & Ibu Sumarni)",
+    addressShort: "Jl. Rembang 25 A, Surabaya",
+    addressFull: "Jl. Rembang No. 25 A, Kec. Bubutan, Surabaya, Jawa Timur",
+    addressNote: "📌 Akses dekat Jl. Dupak / Krembangan / Pasar Turi Surabaya",
+    targetDate: new Date('2026-10-11T08:00:00+07:00').getTime(),
+    calStart: "20261011T010000Z", // 08:00 WIB = 01:00 UTC
+    calEnd: "20261011T070000Z",   // 14:00 WIB = 07:00 UTC
+    calTitle: "Ngunduh Mantu: Tito Sumarsono & Andini Melati Putri",
+    calDesc: "Acara Tasyakuran Ngunduh Mantu Tito Sumarsono & Andini Melati Putri di Jl. Rembang 25 A, Surabaya.",
+    mapLat: -7.2475,
+    mapLng: 112.7275,
+    gmapsQuery: "Jl.+Rembang+25+A+Surabaya",
+    gmapsIframe: "https://maps.google.com/maps?q=Jl.+Rembang+25+A+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed",
+    gmapsDir: "https://www.google.com/maps/dir/?api=1&destination=Jl.+Rembang+25A+Surabaya",
+    storageKey: "tito_andini_wishes_mantu",
+    defaultWishes: []
+  }
+};
+
+let currentEvent = null;
+let weddingMap = null;
+let currentMapMarker = null;
+
+/* ========================================================
+   INITIALIZATION
+   ======================================================== */
 document.addEventListener('DOMContentLoaded', () => {
+  // Determine current active event
+  currentEvent = resolveActiveEvent();
+
+  // Apply event metadata to DOM
+  applyEventToDOM(currentEvent);
+
   // 1. Guest Name from URL Parameter (?to=Nama+Tamu or ?u=Nama+Tamu)
   initGuestName();
 
   // 2. Cover / Envelope Opening
   initCoverModal();
 
-  // 3. Audio & Music Player (Web Audio API Synthesizer + Fallback)
+  // 3. Audio & Music Player
   initMusicPlayer();
 
-  // 4. Countdown Timer to 9 October 2026 19:00 WIB
+  // 4. Countdown Timer
   initCountdown();
 
   // 5. Calendar Integration (Google Calendar & ICS)
   initCalendar();
 
-  // 6. Gallery Lightbox & Filtering
+  // 6. Gallery Lightbox & Filtering (Using new photos)
   initGallery();
 
-  // 7. Guestbook & RSVP with LocalStorage persistence
+  // 7. Event Switcher (if tabs exist)
+  initEventSwitcher();
+
+  // 8. Guestbook & RSVP with Event-Segregated LocalStorage
   initGuestbook();
 
-  // 8. Copy to Clipboard (Bank Account & Address)
+  // 9. Copy to Clipboard (Bank Account & Address)
   initCopyButtons();
 
-  // 9. Falling Petals & Sparkles Canvas Animation
+  // 10. Falling Petals & Sparkles Canvas Animation
   initPetalsCanvas();
 
-  // 10. Interactive Leaflet & Google Maps View
+  // 11. Interactive Leaflet & Google Maps View
   initLeafletMap();
 
-  // 11. Navigation Spy
+  // 12. Navigation Spy
   initNavSpy();
 });
+
+/* ========================================================
+   RESOLVE ACTIVE EVENT
+   ======================================================== */
+function resolveActiveEvent() {
+  // 1. Check data-event attribute on body
+  const bodyEvent = document.body.dataset.event;
+  if (bodyEvent && WEDDING_EVENTS[bodyEvent]) {
+    return WEDDING_EVENTS[bodyEvent];
+  }
+
+  // 2. Check URL search param (?acara=... or ?event=...)
+  const urlParams = new URLSearchParams(window.location.search);
+  const paramEvent = urlParams.get('acara') || urlParams.get('event');
+  if (paramEvent) {
+    const key = paramEvent.toLowerCase().trim();
+    if (key === 'walimah' || key === 'syukuran') return WEDDING_EVENTS.walimah;
+    if (key === 'akad' || key === 'resepsi') return WEDDING_EVENTS.akad;
+    if (key === 'ngunduh-mantu' || key === 'ngunduh' || key === 'mantu' || key === 'unduhmantu') return WEDDING_EVENTS['ngunduh-mantu'];
+  }
+
+  // 3. Check pathname
+  const path = window.location.pathname.toLowerCase();
+  if (path.includes('/walimah')) return WEDDING_EVENTS.walimah;
+  if (path.includes('/akad')) return WEDDING_EVENTS.akad;
+  if (path.includes('/ngunduh-mantu') || path.includes('/mantu')) return WEDDING_EVENTS['ngunduh-mantu'];
+
+  // Default to Walimatul 'Ursi
+  return WEDDING_EVENTS.walimah;
+}
+
+/* ========================================================
+   APPLY EVENT DETAILS TO DOM ELEMENTS
+   ======================================================== */
+function applyEventToDOM(event) {
+  if (!event) return;
+
+  // Cover Screen
+  const coverSub = document.querySelector('.cover-sub');
+  if (coverSub) coverSub.textContent = event.coverSub;
+
+  const coverDatePill = document.querySelector('.cover-date-pill');
+  if (coverDatePill) coverDatePill.textContent = event.dateFormatted;
+
+  // Hero Section
+  const invitationType = document.querySelector('.invitation-type');
+  if (invitationType) invitationType.textContent = event.title;
+
+  const invitationSubtitle = document.querySelector('.invitation-subtitle');
+  if (invitationSubtitle) invitationSubtitle.textContent = event.subtitle;
+
+  const heroDate = document.querySelector('.hero-date');
+  if (heroDate) {
+    heroDate.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 4h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>
+      ${event.dateFormatted} • Surabaya
+    `;
+  }
+
+  // Highlight Banner
+  const bannerDayName = document.querySelector('.highlight-date-badge .day-name');
+  if (bannerDayName) bannerDayName.textContent = event.dateDayName;
+
+  const bannerDayNum = document.querySelector('.highlight-date-badge .day-num');
+  if (bannerDayNum) bannerDayNum.textContent = event.dateDayNum;
+
+  const bannerMonthYear = document.querySelector('.highlight-date-badge .month-year');
+  if (bannerMonthYear) bannerMonthYear.textContent = event.dateMonthYear;
+
+  const highlightTimeInfo = document.querySelector('.highlight-time-info');
+  if (highlightTimeInfo) {
+    highlightTimeInfo.innerHTML = `
+      <h4>${event.timeDisplay}</h4>
+      <p>${event.title} • ${event.addressShort}</p>
+    `;
+  }
+
+  // Map Text & Address Card
+  const locDetailCard = document.querySelector('.location-detail-card .loc-text');
+  if (locDetailCard) {
+    locDetailCard.innerHTML = `
+      <strong>${event.venueName}</strong>
+      <p>${event.addressFull}</p>
+      <span class="loc-note">${event.addressNote}</span>
+    `;
+  }
+
+  // Floating map badge
+  const mapFloatingBadge = document.querySelector('.map-floating-badge');
+  if (mapFloatingBadge) {
+    mapFloatingBadge.innerHTML = `
+      <span class="pulse-dot"></span>
+      <span>Lokasi Acara: ${event.addressShort}</span>
+    `;
+  }
+
+  // Map Direction Button
+  const btnMap = document.querySelector('.btn-map');
+  if (btnMap) {
+    btnMap.href = event.gmapsDir;
+  }
+
+  // Google Maps View Button
+  const btnGmaps = document.querySelector('.map-action-grid a.btn-copy-alt');
+  if (btnGmaps) {
+    btnGmaps.href = `https://maps.google.com/?q=${event.gmapsQuery}`;
+  }
+
+  // Copy Address Button
+  const btnCopyAddr = document.querySelector('.map-section-box .btn-copy');
+  if (btnCopyAddr) {
+    btnCopyAddr.dataset.copy = `${event.venueName} - ${event.addressFull}`;
+  }
+
+  // Google Maps Iframe Fallback
+  const gmapsIframe = document.querySelector('#gmaps-map-wrap iframe');
+  if (gmapsIframe) {
+    gmapsIframe.src = event.gmapsIframe;
+  }
+
+  // Update Leaflet Map view if map already loaded
+  updateLeafletMapView(event);
+}
 
 /* ========================================================
    1. GUEST NAME INJECTION
@@ -47,7 +283,6 @@ function initGuestName() {
   const rsvpNameInput = document.getElementById('rsvp-name');
 
   if (guestParam) {
-    // Decode and format guest name nicely
     let formattedName = decodeURIComponent(guestParam.replace(/\+/g, ' ')).trim();
     if (formattedName) {
       if (guestNameEl) guestNameEl.textContent = formattedName;
@@ -56,7 +291,6 @@ function initGuestName() {
     }
   }
 
-  // Default guest name
   if (guestNameEl) guestNameEl.textContent = 'Tamu Undangan';
 }
 
@@ -69,20 +303,15 @@ function initCoverModal() {
 
   if (!coverScreen || !openBtn) return;
 
-  // Prevent scrolling when cover is active
   document.body.style.overflow = 'hidden';
 
   openBtn.addEventListener('click', () => {
     coverScreen.classList.add('opened');
     document.body.style.overflow = '';
 
-    // Trigger music playback
     playWeddingMusic();
-
-    // Trigger celebration toast
     showToast('Selamat datang di undangan kami ✨');
 
-    // Invalidate map size after cover animation finishes
     setTimeout(() => {
       if (weddingMap) weddingMap.invalidateSize();
     }, 600);
@@ -114,19 +343,16 @@ function initMusicPlayer() {
 
 function playWeddingMusic() {
   const musicToggle = document.getElementById('music-toggle');
-  
-  // Try HTML5 audio first if source exists and loaded
+
   if (bgAudioElement && bgAudioElement.src && !bgAudioElement.src.endsWith('#')) {
     bgAudioElement.play().then(() => {
       isMusicPlaying = true;
       if (musicToggle) musicToggle.classList.add('playing');
       return;
     }).catch(() => {
-      // Fallback to Web Audio API synthesis
       startGenerativeAcousticHarp();
     });
   } else {
-    // Generative Web Audio API acoustic harp / piano progression
     startGenerativeAcousticHarp();
   }
 
@@ -136,9 +362,7 @@ function playWeddingMusic() {
 
 function pauseWeddingMusic() {
   const musicToggle = document.getElementById('music-toggle');
-  if (bgAudioElement) {
-    bgAudioElement.pause();
-  }
+  if (bgAudioElement) bgAudioElement.pause();
   if (musicInterval) {
     clearInterval(musicInterval);
     musicInterval = null;
@@ -147,103 +371,61 @@ function pauseWeddingMusic() {
   if (musicToggle) musicToggle.classList.remove('playing');
 }
 
-/**
- * Romantic soothing generative harp/chimes arpeggiator using Web Audio API.
- * Ensures the invitation has authentic, dreamy, offline-ready romantic music!
- */
 function startGenerativeAcousticHarp() {
+  if (musicInterval) return;
   try {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!audioCtx) {
-      audioCtx = new AudioContext();
+    if (!AudioContext) return;
+    if (!audioCtx) audioCtx = new AudioContext();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    // Pentatonic scale chords in C Major / A Minor
+    const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99];
+
+    function playNote(freq, delay = 0, duration = 2.2) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+
+      gain.gain.setValueAtTime(0, audioCtx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + delay + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + delay + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(audioCtx.currentTime + delay);
+      osc.stop(audioCtx.currentTime + delay + duration);
     }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
+
+    function playArpeggio() {
+      const idx1 = Math.floor(Math.random() * 3);
+      const idx2 = idx1 + 2;
+      const idx3 = idx2 + 2;
+      const idx4 = idx3 + 2;
+
+      playNote(scale[idx1 % scale.length], 0);
+      playNote(scale[idx2 % scale.length], 0.28);
+      playNote(scale[idx3 % scale.length], 0.56);
+      playNote(scale[idx4 % scale.length], 0.84);
     }
 
-    if (musicInterval) clearInterval(musicInterval);
-
-    // D Major / B Minor romantic pentatonic scale frequencies (Hz)
-    // Notes: D4, F#4, A4, B4, C#5, D5, E5, F#5
-    const chordProgression = [
-      // Dmaj9
-      [293.66, 369.99, 440.00, 554.37, 587.33],
-      // Gmaj7
-      [196.00, 246.94, 293.66, 369.99, 440.00],
-      // Bm7
-      [246.94, 293.66, 369.99, 440.00, 587.33],
-      // A sus4 / A
-      [220.00, 293.66, 329.63, 440.00, 554.37]
-    ];
-
-    let chordIndex = 0;
-    let noteIndex = 0;
-
-    const playNextNote = () => {
-      if (!isMusicPlaying) return;
-      const currentChord = chordProgression[chordIndex];
-      const freq = currentChord[noteIndex % currentChord.length];
-
-      playAcousticPluck(freq, 0.08);
-
-      noteIndex++;
-      if (noteIndex >= currentChord.length * 2) {
-        noteIndex = 0;
-        chordIndex = (chordIndex + 1) % chordProgression.length;
-      }
-    };
-
-    // Play every 360ms for a gentle soothing tempo
-    musicInterval = setInterval(playNextNote, 360);
-    playNextNote();
-  } catch (err) {
-    console.log('Web Audio setup:', err);
+    playArpeggio();
+    musicInterval = setInterval(playArpeggio, 2800);
+  } catch (e) {
+    console.log('Generative music not supported:', e);
   }
-}
-
-function playAcousticPluck(frequency, gainLevel) {
-  if (!audioCtx) return;
-  const now = audioCtx.currentTime;
-
-  const osc = audioCtx.createOscillator();
-  const osc2 = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  const filter = audioCtx.createBiquadFilter();
-
-  // Warm acoustic tone with soft sine + triangle blend
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(frequency, now);
-
-  osc2.type = 'triangle';
-  osc2.frequency.setValueAtTime(frequency * 2, now); // soft octave harmonic
-
-  filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(1400, now);
-  filter.frequency.exponentialRampToValueAtTime(400, now + 1.2);
-
-  // Pluck envelope: sharp gentle attack, long warm decay
-  gainNode.gain.setValueAtTime(0.001, now);
-  gainNode.gain.linearRampToValueAtTime(gainLevel, now + 0.025);
-  gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
-
-  osc.connect(gainNode);
-  osc2.connect(gainNode);
-  gainNode.connect(filter);
-  filter.connect(audioCtx.destination);
-
-  osc.start(now);
-  osc2.start(now);
-  osc.stop(now + 2.5);
-  osc2.stop(now + 2.5);
 }
 
 /* ========================================================
    4. COUNTDOWN TIMER
    ======================================================== */
-function initCountdown() {
-  // Target: Jumat, 9 Oktober 2026 19:00:00 WIB (GMT+7)
-  const targetDate = new Date('2026-10-09T19:00:00+07:00').getTime();
+let countdownTimerId = null;
 
+function initCountdown() {
   const daysEl = document.getElementById('count-days');
   const hoursEl = document.getElementById('count-hours');
   const minsEl = document.getElementById('count-mins');
@@ -252,8 +434,9 @@ function initCountdown() {
   if (!daysEl || !hoursEl || !minsEl || !secsEl) return;
 
   function update() {
+    const target = currentEvent ? currentEvent.targetDate : new Date('2026-10-09T19:00:00+07:00').getTime();
     const now = new Date().getTime();
-    const distance = targetDate - now;
+    const distance = target - now;
 
     if (distance <= 0) {
       daysEl.textContent = '00';
@@ -275,7 +458,8 @@ function initCountdown() {
   }
 
   update();
-  setInterval(update, 1000);
+  if (countdownTimerId) clearInterval(countdownTimerId);
+  countdownTimerId = setInterval(update, 1000);
 }
 
 /* ========================================================
@@ -285,32 +469,28 @@ function initCalendar() {
   const gcalBtn = document.getElementById('btn-google-calendar');
   const icalBtn = document.getElementById('btn-ical-calendar');
 
-  const eventTitle = "Walimatul 'Ursi: Tito Sumarsono & Andini Melati Putri";
-  const eventDesc = "Acara Syukuran Pernikahan Tito Sumarsono & Andini Melati Putri. Bertempat di Jl. Rembang 25 A, Surabaya (Bpk. Abdul Karim & Ibu Sumarni).";
-  const eventLoc = "Jl. Rembang 25 A, Surabaya, Jawa Timur";
-  const startDate = "20261009T120000Z"; // 19:00 WIB is 12:00 UTC
-  const endDate = "20261009T160000Z";   // 23:00 WIB is 16:00 UTC
-
   if (gcalBtn) {
     gcalBtn.addEventListener('click', () => {
-      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(eventTitle)}&dates=${startDate}/${endDate}&details=${encodeURIComponent(eventDesc)}&location=${encodeURIComponent(eventLoc)}`;
+      const ev = currentEvent || WEDDING_EVENTS.walimah;
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(ev.calTitle)}&dates=${ev.calStart}/${ev.calEnd}&details=${encodeURIComponent(ev.calDesc)}&location=${encodeURIComponent(ev.addressFull)}`;
       window.open(gcalUrl, '_blank');
     });
   }
 
   if (icalBtn) {
     icalBtn.addEventListener('click', () => {
+      const ev = currentEvent || WEDDING_EVENTS.walimah;
       const icsContent = 
 `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Tito and Andini Wedding//ID
 CALSCALE:GREGORIAN
 BEGIN:VEVENT
-SUMMARY:${eventTitle}
-DESCRIPTION:${eventDesc}
-LOCATION:${eventLoc}
-DTSTART:${startDate}
-DTEND:${endDate}
+SUMMARY:${ev.calTitle}
+DESCRIPTION:${ev.calDesc}
+LOCATION:${ev.addressFull}
+DTSTART:${ev.calStart}
+DTEND:${ev.calEnd}
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR`;
@@ -318,7 +498,7 @@ END:VCALENDAR`;
       const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
       const link = document.createElement('a');
       link.href = window.URL.createObjectURL(blob);
-      link.setAttribute('download', 'Pernikahan-Tito-Andini.ics');
+      link.setAttribute('download', `${ev.id}-Tito-Andini.ics`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -337,8 +517,8 @@ function initGallery() {
   const lightboxClose = document.getElementById('lightbox-close');
   const lightboxPrev = document.getElementById('lightbox-prev');
   const lightboxNext = document.getElementById('lightbox-next');
-  const tabBtns = document.querySelectorAll('.tab-btn');
 
+  // 1. Lightbox setup
   let currentImageIndex = 0;
   const imageSources = [];
 
@@ -347,7 +527,6 @@ function initGallery() {
     if (img) {
       imageSources.push({
         src: img.src,
-        category: card.dataset.category || 'all',
         caption: card.querySelector('.gallery-caption')?.textContent || ''
       });
 
@@ -358,7 +537,7 @@ function initGallery() {
   });
 
   function openLightbox(index) {
-    if (!lightbox || !lightboxImg) return;
+    if (!lightbox || !lightboxImg || !imageSources[index]) return;
     currentImageIndex = index;
     lightboxImg.src = imageSources[index].src;
     lightbox.classList.add('active');
@@ -402,75 +581,102 @@ function initGallery() {
     if (e.key === 'ArrowRight' && lightboxNext) lightboxNext.click();
   });
 
-  // Filter tabs
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tabBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const filter = btn.dataset.filter;
+  // 2. 2-Slide Carousel Controller
+  const track = document.getElementById('gallery-track');
+  const prevBtn = document.getElementById('slider-prev-btn');
+  const nextBtn = document.getElementById('slider-next-btn');
+  const dots = document.querySelectorAll('.slider-dot');
+  const pageText = document.getElementById('slider-page-text');
 
-      galleryItems.forEach(item => {
-        if (filter === 'all' || item.dataset.category === filter) {
-          item.style.display = 'block';
+  let activeSlide = 0;
+  const totalSlides = 2;
+
+  function updateSlider(slideIndex) {
+    if (!track) return;
+    activeSlide = (slideIndex + totalSlides) % totalSlides;
+    track.style.transform = `translateX(-${activeSlide * 50}%)`;
+
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeSlide);
+    });
+
+    if (pageText) {
+      pageText.textContent = `Slide ${activeSlide + 1} dari ${totalSlides}`;
+    }
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      updateSlider(activeSlide - 1);
+    });
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      updateSlider(activeSlide + 1);
+    });
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetIndex = parseInt(dot.dataset.slide, 10);
+      if (!isNaN(targetIndex)) {
+        updateSlider(targetIndex);
+      }
+    });
+  });
+
+  // Touch Swipe for mobile devices
+  if (track) {
+    let startX = 0;
+    let endX = 0;
+
+    track.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    }, { passive: true });
+
+    track.addEventListener('touchend', (e) => {
+      endX = e.changedTouches[0].clientX;
+      const diffX = startX - endX;
+      if (Math.abs(diffX) > 40) {
+        if (diffX > 0) {
+          updateSlider(activeSlide + 1); // Swipe left -> next
         } else {
-          item.style.display = 'none';
+          updateSlider(activeSlide - 1); // Swipe right -> prev
         }
-      });
+      }
+    }, { passive: true });
+  }
+}
+
+/* ========================================================
+   7. EVENT SWITCHER (TABS FOR MASTER / MAIN PAGE)
+   ======================================================== */
+function initEventSwitcher() {
+  const switcherBtns = document.querySelectorAll('.event-tab-btn');
+  if (!switcherBtns.length) return;
+
+  switcherBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const eventKey = btn.dataset.event;
+      if (WEDDING_EVENTS[eventKey]) {
+        switcherBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        currentEvent = WEDDING_EVENTS[eventKey];
+        applyEventToDOM(currentEvent);
+        initCountdown();
+        initGuestbook(); // Reload comments for this specific event!
+
+        showToast(`Beralih ke jadwal: ${currentEvent.title}`);
+      }
     });
   });
 }
 
 /* ========================================================
-   7. GUESTBOOK & RSVP WITH PERSISTENCE & LIKES
+   8. GUESTBOOK & RSVP WITH EVENT-SEGREGATED STORAGE & LIKES
    ======================================================== */
-const DEFAULT_WISHES = [
-  {
-    id: "w-1",
-    name: "H. Achmad Fauzi & Keluarga",
-    status: "hadir",
-    guestCount: "2 Orang",
-    message: "Barakallahu laka wa baraka 'alaika wa jama'a bainakuma fii khoir. Selamat menempuh hidup baru Mas Tito dan Mbak Andini. Semoga menjadi keluarga sakinah mawaddah warahmah, rukun till jannah.",
-    time: "2 jam yang lalu",
-    likes: 12
-  },
-  {
-    id: "w-2",
-    name: "Rizky Firmansyah, S.T.",
-    status: "hadir",
-    guestCount: "1 Orang",
-    message: "Selamat brader Tito! Akhirnya berlabuh ke pelaminan bersama Andini tercinta. Insya Allah hadir tepat waktu di Jl. Rembang Surabaya!",
-    time: "4 jam yang lalu",
-    likes: 8
-  },
-  {
-    id: "w-3",
-    name: "dr. Nurul Hidayati",
-    status: "hadir",
-    guestCount: "2 Orang",
-    message: "Masya Allah cantiknya sahabatku Andini. Selamat ya sayang, semoga Tito senantiasa menjadi imam terbaik pembimbing ke surga.",
-    time: "Kemarin",
-    likes: 15
-  },
-  {
-    id: "w-4",
-    name: "Bambang Soedjarwo & Ibu (Keluarga Besar Surabaya)",
-    status: "hadir",
-    guestCount: "Rombongan Keluarga",
-    message: "Turut bersuka cita atas pernikahan ananda Tito & Andini. Semoga senantiasa dalam limpahan berkah dan kelapangan rezeki dari Allah SWT.",
-    time: "2 hari yang lalu",
-    likes: 7
-  },
-  {
-    id: "w-5",
-    name: "Dimas Anggara & Istri (Jakarta)",
-    status: "tidak-hadir",
-    guestCount: "0 Orang",
-    message: "Selamat Tito & Andini! Mohon maaf belum bisa hadir langsung karena dinas luar kota, namun doa tulus kami senantiasa menyertai keberkahan rumah tangga kalian.",
-    time: "3 hari yang lalu",
-    likes: 4
-  }
-];
-
 function initGuestbook() {
   const form = document.getElementById('rsvp-form');
   const wishesListEl = document.getElementById('guest-wishes-list');
@@ -480,25 +686,31 @@ function initGuestbook() {
   const countAllWishesEl = document.getElementById('count-all-wishes');
   const filterTabs = document.querySelectorAll('.comment-tab');
 
+  const ev = currentEvent || WEDDING_EVENTS.walimah;
+  const storageKey = ev.storageKey;
+
   let activeFilter = 'all';
 
-  // Load from local storage or set defaults
+  // Load from local storage or set event defaults
   let wishes = [];
   try {
-    const saved = localStorage.getItem('tito_andini_wishes');
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       wishes = JSON.parse(saved);
+      // Clean up any old mock/dummy items
+      wishes = wishes.filter(item => item && item.id && !item.id.startsWith('w-w') && !item.id.startsWith('w-a') && !item.id.startsWith('w-m') && !/^w-[1-9]$/.test(item.id));
+      localStorage.setItem(storageKey, JSON.stringify(wishes));
     } else {
-      wishes = [...DEFAULT_WISHES];
-      localStorage.setItem('tito_andini_wishes', JSON.stringify(wishes));
+      wishes = [];
+      localStorage.setItem(storageKey, JSON.stringify(wishes));
     }
   } catch (e) {
-    wishes = [...DEFAULT_WISHES];
+    wishes = [];
   }
 
   function saveWishes() {
     try {
-      localStorage.setItem('tito_andini_wishes', JSON.stringify(wishes));
+      localStorage.setItem(storageKey, JSON.stringify(wishes));
     } catch (e) {}
   }
 
@@ -519,7 +731,6 @@ function initGuestbook() {
     if (statLikesEl) statLikesEl.textContent = totalLikes;
     if (countAllWishesEl) countAllWishesEl.textContent = wishes.length;
 
-    // Filtered list
     const filtered = wishes.filter(item => {
       if (activeFilter === 'all') return true;
       return item.status === activeFilter;
@@ -527,8 +738,9 @@ function initGuestbook() {
 
     if (filtered.length === 0) {
       wishesListEl.innerHTML = `
-        <div style="text-align: center; padding: 24px; color: var(--text-muted); font-size: 0.85rem;">
-          Belum ada komentar untuk kategori ini. Jadilah yang pertama memberikan doa restu!
+        <div style="text-align: center; padding: 28px 16px; color: var(--text-muted); font-size: 0.88rem; background: var(--bg-cream); border-radius: 16px; border: 1px dashed rgba(212, 175, 55, 0.4);">
+          <div style="font-size: 1.8rem; margin-bottom: 6px;">💌</div>
+          Belum ada komentar dan ucapan.<br>Jadilah yang pertama memberikan doa restu untuk Tito &amp; Andini!
         </div>
       `;
       return;
@@ -548,7 +760,6 @@ function initGuestbook() {
         statusClass = 'ragu';
       }
 
-      // First letter avatar
       const initial = item.name.charAt(0).toUpperCase();
 
       card.innerHTML = `
@@ -576,7 +787,6 @@ function initGuestbook() {
         </div>
       `;
 
-      // Handle like click
       const likeBtn = card.querySelector('.wish-likes-btn');
       likeBtn.addEventListener('click', () => {
         if (!item.userLiked) {
@@ -614,11 +824,15 @@ function initGuestbook() {
   renderWishes();
 
   if (form) {
-    form.addEventListener('submit', (e) => {
+    // Remove previous listeners by cloning if re-initted
+    const newForm = form.cloneNode(true);
+    form.parentNode.replaceChild(newForm, form);
+
+    newForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const name = document.getElementById('rsvp-name').value.trim();
-      const statusInput = form.querySelector('input[name="attendance"]:checked');
+      const statusInput = newForm.querySelector('input[name="attendance"]:checked');
       const guestCountSelect = document.getElementById('rsvp-count');
       const guestCountText = guestCountSelect ? guestCountSelect.options[guestCountSelect.selectedIndex].text : '2 Orang';
       const message = document.getElementById('rsvp-message').value.trim();
@@ -653,8 +867,6 @@ function initGuestbook() {
       renderWishes();
       document.getElementById('rsvp-message').value = '';
       showToast('Alhamdulillah, ucapan dan kehadiran Anda berhasil dikirim! ✨');
-
-      // Scroll smoothly to comments list
     });
   }
 }
@@ -666,7 +878,7 @@ function escapeHtml(string) {
 }
 
 /* ========================================================
-   8. COPY TO CLIPBOARD
+   9. COPY TO CLIPBOARD
    ======================================================== */
 function initCopyButtons() {
   const copyBtns = document.querySelectorAll('.btn-copy');
@@ -678,7 +890,6 @@ function initCopyButtons() {
         navigator.clipboard.writeText(textToCopy).then(() => {
           showToast(`Berhasil disalin: ${textToCopy}`);
         }).catch(() => {
-          // Fallback
           const tempInput = document.createElement('input');
           tempInput.value = textToCopy;
           document.body.appendChild(tempInput);
@@ -714,7 +925,7 @@ function showToast(message) {
 }
 
 /* ========================================================
-   9. FALLING WHITE ROSE PETALS & SPARKLES CANVAS
+   10. FALLING PETALS CANVAS
    ======================================================== */
 function initPetalsCanvas() {
   const canvas = document.getElementById('petals-canvas');
@@ -755,7 +966,6 @@ function initPetalsCanvas() {
       ctx.rotate((p.rotation * Math.PI) / 180);
 
       ctx.beginPath();
-      // Draw petal shape
       ctx.moveTo(0, 0);
       ctx.bezierCurveTo(p.size, -p.size, p.size * 1.5, p.size, 0, p.size * 1.8);
       ctx.bezierCurveTo(-p.size * 1.5, p.size, -p.size, -p.size, 0, 0);
@@ -769,12 +979,10 @@ function initPetalsCanvas() {
       ctx.fill();
       ctx.restore();
 
-      // Update position
       p.y += p.speedY;
       p.x += Math.sin(p.y * 0.015) * 0.6 + p.speedX * 0.3;
       p.rotation += p.rotSpeed;
 
-      // Wrap around
       if (p.y > height + 20) {
         p.y = -20;
         p.x = Math.random() * width;
@@ -788,10 +996,8 @@ function initPetalsCanvas() {
 }
 
 /* ========================================================
-   10. INTERACTIVE MAP VIEW (LEAFLET & OPENSTREETMAP)
+   11. INTERACTIVE MAP VIEW (LEAFLET)
    ======================================================== */
-let weddingMap = null;
-
 function initLeafletMap() {
   const mapElement = document.getElementById('leaflet-map');
   const tabLeaflet = document.getElementById('btn-tab-leaflet');
@@ -801,25 +1007,21 @@ function initLeafletMap() {
 
   if (!mapElement) return;
 
-  // Jl. Rembang 25A, Surabaya Coordinates (Jepara/Bubutan Area, Surabaya)
-  const venueLat = -7.2475;
-  const venueLng = 112.7275;
+  const ev = currentEvent || WEDDING_EVENTS.walimah;
 
   try {
     if (typeof L !== 'undefined') {
       weddingMap = L.map('leaflet-map', {
-        center: [venueLat, venueLng],
+        center: [ev.mapLat, ev.mapLng],
         zoom: 16,
         scrollWheelZoom: false
       });
 
-      // Standard OpenStreetMap Tiles
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(weddingMap);
 
-      // Custom Gold Pin Marker
       const goldIcon = L.divIcon({
         className: 'custom-wedding-marker',
         html: `
@@ -835,19 +1037,17 @@ function initLeafletMap() {
         popupAnchor: [0, -18]
       });
 
-      const marker = L.marker([venueLat, venueLng], { icon: goldIcon }).addTo(weddingMap);
+      currentMapMarker = L.marker([ev.mapLat, ev.mapLng], { icon: goldIcon }).addTo(weddingMap);
 
-      // Custom rich popup
-      marker.bindPopup(`
+      currentMapMarker.bindPopup(`
         <div style="font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; padding: 6px 4px; min-width: 180px;">
-          <strong style="color: #1b4332; font-size: 0.92rem; display: block;">Walimatul 'Ursi</strong>
+          <strong style="color: #1b4332; font-size: 0.92rem; display: block;">${ev.title}</strong>
           <span style="font-weight: 700; color: #b38728; font-size: 1rem; display: block; margin: 2px 0;">Tito &amp; Andini</span>
-          <p style="font-size: 0.78rem; color: #333; margin: 4px 0 2px;">Kediaman Bpk. Abdul Karim &amp; Ibu Sumarni</p>
-          <span style="font-size: 0.74rem; color: #666; font-weight: 600;">Jl. Rembang 25 A, Surabaya</span>
+          <p style="font-size: 0.78rem; color: #333; margin: 4px 0 2px;">${ev.venueName}</p>
+          <span style="font-size: 0.74rem; color: #666; font-weight: 600;">${ev.addressShort}</span>
         </div>
       `).openPopup();
 
-      // Invalidate size on window resize
       window.addEventListener('resize', () => {
         if (weddingMap) weddingMap.invalidateSize();
       });
@@ -856,7 +1056,7 @@ function initLeafletMap() {
     console.log('Leaflet Map Init:', err);
   }
 
-  // Map Tab Switcher logic
+  // Switcher Tab between Leaflet and Google Maps View
   if (tabLeaflet && tabGmaps && leafletWrap && gmapsWrap) {
     tabLeaflet.addEventListener('click', () => {
       tabLeaflet.classList.add('active');
@@ -877,8 +1077,27 @@ function initLeafletMap() {
   }
 }
 
+function updateLeafletMapView(event) {
+  if (!weddingMap || !event) return;
+  try {
+    weddingMap.setView([event.mapLat, event.mapLng], 16);
+    if (currentMapMarker) {
+      currentMapMarker.setLatLng([event.mapLat, event.mapLng]);
+      currentMapMarker.setPopupContent(`
+        <div style="font-family: 'Plus Jakarta Sans', sans-serif; text-align: center; padding: 6px 4px; min-width: 180px;">
+          <strong style="color: #1b4332; font-size: 0.92rem; display: block;">${event.title}</strong>
+          <span style="font-weight: 700; color: #b38728; font-size: 1rem; display: block; margin: 2px 0;">Tito &amp; Andini</span>
+          <p style="font-size: 0.78rem; color: #333; margin: 4px 0 2px;">${event.venueName}</p>
+          <span style="font-size: 0.74rem; color: #666; font-weight: 600;">${event.addressShort}</span>
+        </div>
+      `).openPopup();
+    }
+    weddingMap.invalidateSize();
+  } catch (e) {}
+}
+
 /* ========================================================
-   11. NAVIGATION SPY
+   12. NAVIGATION SPY
    ======================================================== */
 function initNavSpy() {
   const sections = document.querySelectorAll('section[id]');
